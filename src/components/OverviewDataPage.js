@@ -5,12 +5,17 @@ import {
   Table,
   Button,
   Menu,
+  Divider
 } from 'antd';
 import "antd/dist/antd.css";
 import "../index.css";
+import firebase from '../constants/firebase';
 import '@firebase/firestore';
 import { db } from '../constants/firebase'
-import { Link } from "react-router-dom";
+import {
+  Link,
+  useHistory,
+} from "react-router-dom";
 
 const columns = [
   {
@@ -55,11 +60,11 @@ const columns = [
     title: '',
     fixed: 'right',
     width: '10%',
-    render: () => <Button>ดูรายละเอียด</Button>,
+    render: () => <Button type="primary">ดูรายละเอียด</Button>,
   },
 ];
 
-class UserDataPage extends Component {
+class OverviewDataPage extends Component {
   /*
   compare_timestamp(a, b){
     if(a.timestamp.seconds < b.timestamp.seconds){
@@ -183,7 +188,7 @@ class UserDataPage extends Component {
   async fetch() {
     this.setState({ loading: true });
     const datasnapshot = await db.collection('overviewData').orderBy('userName').get()
-    console.log('datasnapshot', datasnapshot)
+    // console.log('datasnapshot', datasnapshot)
     if (datasnapshot.docs.length > 0) {
       var getUserData = []
       var i = 0
@@ -200,7 +205,7 @@ class UserDataPage extends Component {
         getUserData.push(docData)
         i = i + 1
       }
-      console.log('data', getUserData);
+      // console.log('data', getUserData);
       this.setState({
         loading: false,
         data: getUserData,
@@ -208,27 +213,38 @@ class UserDataPage extends Component {
     }
   };
 
+  signOut() {
+    firebase.auth().signOut().then(() => {
+      useHistory().replace({ pathname: "/" })
+    })
+    .catch(error => console.log(error))
+  }
+
   render() {
     const { data, loading } = this.state;
     return (
-      <Row className="App" style={{backgroundColor: '#7BDAF8', margin: 0}}>
+      <Row className="App" style={{backgroundColor: '#7BDAF8'}}>
         <Col span={4} style={{backgroundColor: 'white'}}>
           <Menu
             defaultSelectedKeys={['1']}
             mode="inline"
           >
             <Menu.Item key="1">
-              User Data
+              Data Overview
             </Menu.Item>
             <Menu.Item key="2">
               Program Management
               <Link to="/program" />
             </Menu.Item>
           </Menu>
+          <Divider />
+          <Button onClick={(e) => this.signOut()}>
+            Log Out
+          </Button>
         </Col>
         <Col span={20} style={{minHeight: '100vh'}}>
-          <Row style={{margin: 10}}>
-            <Col span={24} style={{backgroundColor: 'white', marginTop: 10, marginBottom: 10, padding: 10, borderRadius: 10}}>
+          <Row style={{marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10 }}>
+            <Col span={24} style={{backgroundColor: 'white', padding: 10, borderRadius: 10}}>
               <Table
                 dataSource={data}
                 loading={loading}
@@ -243,4 +259,4 @@ class UserDataPage extends Component {
   }
 }
 
-export default UserDataPage;
+export default OverviewDataPage;

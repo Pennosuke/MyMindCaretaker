@@ -5,12 +5,17 @@ import {
   Table,
   Button,
   Menu,
+  Divider,
 } from 'antd';
 import "antd/dist/antd.css";
 import "../index.css";
+import firebase from '../constants/firebase';
 import '@firebase/firestore';
 import { db } from '../constants/firebase'
-import { Link } from "react-router-dom";
+import {
+  Link,
+  useHistory,
+} from "react-router-dom";
 
 const columns = [
   {
@@ -97,27 +102,38 @@ class ProgramPage extends Component {
     }
   };
 
+  signOut() {
+    firebase.auth().signOut().then(() => {
+      useHistory().replace({ pathname: "/" })
+    })
+    .catch(error => console.log(error))
+  }
+
   render() {
     const { data, loading } = this.state;
     return (
-      <Row className="App" style={{backgroundColor: '#7BDAF8', margin: 0}}>
+      <Row className="App" style={{backgroundColor: '#7BDAF8'}}>
         <Col span={4} style={{backgroundColor: 'white'}}>
           <Menu
             defaultSelectedKeys={['2']}
             mode="inline"
           >
             <Menu.Item key="1" href="/">
-              User Data
+              Data Overview
               <Link to="/" />
             </Menu.Item>
             <Menu.Item key="2">
               Program Management
             </Menu.Item>
           </Menu>
+          <Divider />
+          <Button onClick={(e) => this.signOut()}>
+            Log Out
+          </Button>
         </Col>
         <Col span={20} style={{minHeight: '100vh'}}>
-          <Row style={{margin: 10}}>
-            <Col span={24} style={{backgroundColor: 'white', marginTop: 10, marginBottom: 10, padding: 10, borderRadius: 10}}>
+          <Row style={{marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10 }}>
+            <Col span={24} style={{backgroundColor: 'white', padding: 10, borderRadius: 10}}>
               <div>This is Program Management Page</div>
             </Col>
           </Row>
