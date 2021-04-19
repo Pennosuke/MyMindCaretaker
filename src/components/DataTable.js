@@ -39,9 +39,9 @@ class DataTable extends Component {
   }
 
   handleTableChange = (pagination, filters, sorter) => {
-    console.log('pagination')
-    console.log('filters')
-    console.log('sorter')
+    // console.log('pagination')
+    // console.log('filters')
+    // console.log('sorter')
     this.fetch({
       sortField: sorter.field,
       sortOrder: sorter.order,

@@ -1,17 +1,35 @@
 import React, { Component } from 'react';
 import {
-  BrowserRouter,
-  Router,
+  // BrowserRouter,
+  // Router,
   Route,
-  Link,
-  Redirect
+  // Link,
+  Redirect,
+  // useParams
 } from 'react-router-dom'
 import firebase from './constants/firebase';
 import 'firebase/firestore';
 
-import LoginPage from './components/LoginPage'
-import OverviewDataPage from './components/OverviewDataPage'
-import ProgramPage from './components/ProgramPage'
+import LoginPage from './pages/LoginPage'
+
+import OverviewDataPage from './pages/dataOverview/OverviewDataPage'
+import UserDataPage from './pages/dataOverview/UserDataPage'
+import EvaluationDataPage from './pages/dataOverview/EvaluationDataPage'
+import EvaluationAnswerPage from './pages/dataOverview/EvaluationAnswerPage'
+import ProgramDataPage from './pages/dataOverview/ProgramDataPage'
+import ProgramAnswerPage from './pages/dataOverview/ProgramAnswerPage'
+import ExtraProgramHistoryPage from './pages/dataOverview/ExtraProgramHistoryPage'
+import ExtraProgramAnswerPage from './pages/dataOverview/ExtraProgramAnswerPage'
+
+import DepressionAlertPage from './pages/depressionAlert/DepressionAlertPage'
+
+import ProgramManagementPage from './pages/programManagement/ProgramManagementPage'
+
+import ProgramStoragePage from './pages/programStorage/ProgramStoragePage'
+import CreateProgramPage from './pages/programStorage/CreateProgramPage'
+import ExtraProgramDataPage from './pages/programStorage/ExtraProgramDataPage'
+import EditProgramPage from './pages/programStorage/EditProgramPage'
+
 
 class App extends Component {
   constructor(props) {
@@ -39,18 +57,27 @@ class App extends Component {
     if (this.state.user === null) {
       return (
         <div>
-          <LoginPage />
+          <Redirect to='/' />
+          <Route exact path='/' component={LoginPage} />
         </div>
       )
     }
     return (
       <div>
-        <Route exact path='/'>
-          <Redirect to="/overview" />
-        </Route>
-        <Route exact path='/overview' component={OverviewDataPage} />
-        {/* <Route exact path='/userData/:id' component={UserDataPage} /> */}
-        <Route exact path='/program' component={ProgramPage} />
+        <Route exact path='/' component={OverviewDataPage} />
+        <Route exact path='/user-data/:id' component={UserDataPage} />
+        <Route exact path='/user-data/:id/evaluation' component={EvaluationDataPage} />
+        <Route exact path='/user-data/:id/evaluation/:collection/answer/:doc' component={EvaluationAnswerPage} />
+        <Route exact path='/user-data/:id/user-program/:collection' component={ProgramDataPage} />
+        <Route exact path='/user-data/:id/user-program/:collection/answer/:doc' component={ProgramAnswerPage} />
+        <Route exact path='/user-data/:id/extra-program/:collection' component={ExtraProgramHistoryPage} />
+        <Route exact path='/user-data/:id/extra-program/:collection/answer/:doc' component={ExtraProgramAnswerPage} />
+        <Route exact path='/depression-alert' component={DepressionAlertPage} />
+        <Route exact path='/program-manage' component={ProgramManagementPage} />
+        <Route exact path='/program-storage' component={ProgramStoragePage} />
+        <Route exact path='/program-storage/create-program' component={CreateProgramPage} />
+        <Route exact path='/program-storage/program-data/:id' component={ExtraProgramDataPage} />
+        <Route exact path='/program-storage/program-data/:id/edit-program' component={EditProgramPage} />
       </div>
     )
   }
